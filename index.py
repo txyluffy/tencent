@@ -1,9 +1,15 @@
 #!/usr/bin/python
+from gevent import monkey; monkey.patch_all()
 
-import os
+from time import sleep
+from bottle import route, run
 
-def main():
-  print "hello world";
+@route('/v1/hello')
+def stream():
+    yield 'Hello World!'
+    sleep(1)
+    yield 'MIDDLE'
+    sleep(2)
+    yield 'END'
 
-if __name__ == "__main__":
-  main()
+run(host='0.0.0.0', port=8080, server='gevent')
